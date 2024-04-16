@@ -1,7 +1,7 @@
 {
    "manifest_version": 3,
    "name": "PlayNonStop",
-   "version": "0.0.1",
+   "version": "0.0.2",
    "description": "Skip Youtube autopause and keep playing",
    "icons": {
       "16": "icons/icon16.png",

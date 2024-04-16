@@ -9,10 +9,10 @@ chrome.runtime.onMessage.addListener(function (message) {
 
 function updateTabs() {
   chrome.windows.getCurrent(function(currentWindow) {
-    chrome.tabs.query({}, function (tabs) {
-      tabs.forEach(function (tab) {
+    chrome.tabs.query({}, function(tabs) {
+      tabs.forEach(function(tab) {
         if (tab.url.startsWith("https://www.youtube.com/") || tab.url.startsWith("https://www.music.youtube.com/")) {
-          chrome.tabs.move(tab.id, { windowId: currentWindow.id, index: 0 });
+          chrome.tabs.move(tab.id, { windowId: currentWindow.id, index: tab.index });
         }
       });
     });
