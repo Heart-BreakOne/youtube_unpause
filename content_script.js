@@ -1,33 +1,42 @@
 
 function simulateUserInteraction() {
 
-
-  const volumeSlider = document.querySelector(".ytp-volume-panel");
-  if (volumeSlider) {
-    volumeSlider.click();
-  }
-  const element = document.querySelector('h1.style-scope.ytd-watch-metadata yt-formatted-string');
-  if (element) {
-    element.click();
-  }
+  chrome.storage.local.get('pause_checkbox', function (data) {
+    let state = data.pause_checkbox ?? false;
+    if (!state) {
+      const volumeSlider = document.querySelector(".ytp-volume-panel");
+      if (volumeSlider) {
+        volumeSlider.click();
+      }
+      const element = document.querySelector('h1.style-scope.ytd-watch-metadata yt-formatted-string');
+      if (element) {
+        element.click();
+      }
+    }
+  });
 }
 
 const targetNode = document.body;
 
 const config = { childList: true, subtree: true };
 
-const callback = function (mutationsList, observer) {
-  for (const mutation of mutationsList) {
-    if (mutation.type === 'childList') {
-      mutation.addedNodes.forEach(node => {
-        if (node && node.tagName && node.tagName.toLowerCase() === 'tp-yt-iron-overlay-backdrop') {
-          node.click();
-          chrome.runtime.sendMessage({ message: "simulateTabFocus" });
-          node.click();
-        }
-      });
+const callback = async function (mutationsList, observer) {
+  chrome.storage.local.get('pause_checkbox', async function (data) {
+    if (data.pause_checkbox) {
+      return;
     }
-  }
+    for (const mutation of mutationsList) {
+      if (mutation.type === 'childList') {
+        for (const node of mutation.addedNodes) {
+          if (node && node.tagName && node.tagName.toLowerCase() === 'tp-yt-iron-overlay-backdrop') {
+            node.click();
+            chrome.runtime.sendMessage({ message: "simulateTabFocus" });
+            node.click();
+          }
+        }
+      }
+    }
+  });
 };
 
 

@@ -22,8 +22,13 @@ function updateTabs() {
 updateTabs();
 
 (function loopUpdateTabs() {
-  setInterval(updateTabs, 300000);
-}());
+  chrome.storage.local.get('pause_checkbox', function(data) {
+    let state = data.pause_checkbox ?? false;
+    if (!state) {
+      setInterval(updateTabs, 300000);
+    }
+  });
+})();
 
 
 /*
